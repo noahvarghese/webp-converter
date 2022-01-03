@@ -6,3 +6,5 @@ if [ "$EUID" -ne 0 ]
 fi
 
 sudo cp ./src/main.py /usr/local/bin/image-converter.py
+
+echo "Command can now be run from the CLI as image-converter.py"
