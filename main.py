@@ -17,8 +17,6 @@ help_menu = ("Exactly one file type must be specified\n\n" +
 
 
 def load_args() -> {"file_type": str, "file_name": str, "destination": str}:
-    print("Loading args")
-
     try:
         opts, args = getopt.getopt(sys.argv[1:], "pjwf:d:h", [
                                    "destination=", "help", "file=", "webp", "jpg", "png"])
@@ -44,34 +42,31 @@ def load_args() -> {"file_type": str, "file_name": str, "destination": str}:
     return args
 
 
-def check_args(args: {"file_type": str, "file_name": str, "destination": str}) -> bool:
-    print("Checking args")
+def check_args(args: {"file_type": str, "file_name": str, "destination": str}) -> {"file_type": str, "file_name": str, "destination": str}:
     exists = check_file_exists(args["file_name"])
 
     if exists == False:
         sys.exit("File " + args["file_name"] + " does not exist")
 
     check_file_type(args["file_type"])
-    check_save_destination(args["destination"],
-                           args["file_name"], args["file_type"])
+    args["destination"] = check_save_destination(args["destination"],
+                                                 args["file_name"], args["file_type"])
+
+    return args
 
 
 def check_file_type(file_type: str = "") -> bool:
-    print("Checking file type")
-    if file_type == "" or type(file_type) != "<class 'str'>":
-        sys.exit("Invalid file type")
+    if file_type == "" or str(type(file_type)) != "<class 'str'>":
+        sys.exit("Invalid file type " + file_type)
     else:
         return True
 
 
 def check_file_exists(file_name: str = "") -> bool:
-    print("Checking file exists " + file_name)
     return os.path.exists(file_name)
 
 
-def check_save_destination(destination: str = "", file_name: str = "", file_type: str = "") -> bool:
-    print("Checking save destination")
-
+def check_save_destination(destination: str = "", file_name: str = "", file_type: str = "") -> str:
     if destination == "" or type(destination) != "<class 'str'>":
         parts = file_name.split(".")
         parts[-1] = file_type
@@ -80,26 +75,24 @@ def check_save_destination(destination: str = "", file_name: str = "", file_type
 
     exists = check_file_exists(destination)
 
-    if exists == False:
+    if exists == True:
         sys.exit(
             "Destination file already exists, overwrite functionality not included")
     else:
-        return
+        return destination
 
 
-def convert_image(file_name="", file_type="", destination=""):
-    print("Converting image")
-    image = Image.open(file_name)
+def convert_image(args: {"file_name": str, "file_type": str, "destination": str}):
+    print("Converting image " + str(args))
+    image = Image.open(args["file_name"])
     image = image.convert("RGB")
-    image.save(destination, file_type)
+    image.save(args["destination"], args["file_type"])
 
 
 def main():
-    print("Hello")
     args = load_args()
-    if check_args(args) == False:
-        sys.exit("Arguments invalid")
-    convert_image()
+    args = check_args(args)
+    convert_image(args)
     return
 
 
