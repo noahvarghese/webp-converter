@@ -14,5 +14,5 @@ Currently supports conversion between jpg, png, and webp.
 ### Operating systems
 
 Library supports windows.
-Install/setup/uninstall scripts only support Linux.
+Install/uninstall scripts only support Linux.
 
