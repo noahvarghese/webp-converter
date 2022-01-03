@@ -67,7 +67,7 @@ def check_file_exists(file_name: str = "") -> bool:
 
 
 def check_save_destination(destination: str = "", file_name: str = "", file_type: str = "") -> str:
-    if destination == "" or type(destination) != "<class 'str'>":
+    if destination == "" or str(type(destination)) != "<class 'str'>":
         parts = file_name.split(".")
         parts[-1] = file_type
         seperator = "."
@@ -83,7 +83,7 @@ def check_save_destination(destination: str = "", file_name: str = "", file_type
 
 
 def convert_image(args: {"file_name": str, "file_type": str, "destination": str}):
-    print("Converting image " + str(args))
+    print("Converting image " + args["file_name"] + " to " + args["file_type"])
     image = Image.open(args["file_name"])
     image = image.convert("RGB")
     image.save(args["destination"], args["file_type"])
